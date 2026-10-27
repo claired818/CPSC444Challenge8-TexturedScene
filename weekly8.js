@@ -44,7 +44,7 @@ controls.dampingFactor = 0.05;
 // ----------------------------------------------------
 // Ground Plane
 // ----------------------------------------------------
-const groundGeometry = new THREE.PlaneGeometry(100, 100);
+const groundGeometry = new THREE.PlaneGeometry(50, 50);
 
 const groundMaterial = new THREE.MeshStandardMaterial({
     color: 0x66aa66
@@ -61,23 +61,63 @@ ground.receiveShadow = true;
 scene.add(ground);
 
 // ----------------------------------------------------
-// Example Cube
+// Stone Wall
 // ----------------------------------------------------
-const cubeGeometry = new THREE.BoxGeometry(4, 4, 4);
+const wallGeometry = new THREE.BoxGeometry(50, 25, 1);
+const wallMaterial = new THREE.MeshStandardMaterial({color: 0xaaaaaa});
 
-const cubeMaterial = new THREE.MeshStandardMaterial({
-    color: 0x3366ff
-});
+const wall = new THREE.Mesh(wallGeometry, wallMaterial);
+wall.position.set(0, 12.5, -25);
 
-const cube = new THREE.Mesh(
-    cubeGeometry,
-    cubeMaterial
-);
+scene.add(wall);
 
-cube.position.y = 2;
-cube.castShadow = true;
+// ----------------------------------------------------
+// Gate
+// ----------------------------------------------------
+const gateShape = new THREE.Shape()
+    .moveTo(-5, 0)
+    .lineTo(5, 0)
+    .lineTo(5, 10)
+    .absarc(0, 10, 5, 0, Math.PI)
+    .lineTo(-5,0)
+;
+const gateGeometry = new THREE.ShapeGeometry(gateShape);
+const gateMaterial = new THREE.MeshStandardMaterial({color: 0xaa5500});
 
-scene.add(cube);
+const gate = new THREE.Mesh(gateGeometry, gateMaterial);
+gate.position.z = -24.4;
+
+scene.add(gate);
+
+// ----------------------------------------------------
+// Crate
+// ----------------------------------------------------
+const crateGeometry = new THREE.BoxGeometry(4, 4, 4);
+const crateMaterial = new THREE.MeshStandardMaterial({color: 0xaa5500});
+
+const crate = new THREE.Mesh(crateGeometry, crateMaterial);
+crate.position.y = 2;
+
+scene.add(crate);
+
+// ----------------------------------------------------
+// Banner
+// ----------------------------------------------------
+const bannerShape = new THREE.Shape()
+    .moveTo(-3, 8)
+    .lineTo(3, 8)
+    .lineTo(3, 0)
+    .lineTo(0, 4)
+    .lineTo(-3, 0)
+    .lineTo(-3, 8)
+;
+const bannerGeometry = new THREE.ExtrudeGeometry(bannerShape);
+const bannerMaterial = new THREE.MeshStandardMaterial({color: 0xaa0000});
+
+const banner = new THREE.Mesh(bannerGeometry, bannerMaterial);
+banner.position.set(-14, 10, -25);
+
+scene.add(banner);
 
 // ----------------------------------------------------
 // Ambient Light
@@ -139,8 +179,6 @@ window.addEventListener("resize", () => {
 function animate() {
 
     requestAnimationFrame(animate);
-
-    cube.rotation.y += 0.01;
 
     controls.update();
 
