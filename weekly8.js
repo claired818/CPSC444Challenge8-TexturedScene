@@ -42,12 +42,27 @@ controls.enableDamping = true;
 controls.dampingFactor = 0.05;
 
 // ----------------------------------------------------
+// Texture Loader
+// ----------------------------------------------------
+const textureLoader = new THREE.TextureLoader();
+
+// ----------------------------------------------------
 // Ground Plane
 // ----------------------------------------------------
 const groundGeometry = new THREE.PlaneGeometry(50, 50);
 
+const groundDiffuseTexture = textureLoader.load('textures/groundStone/ground_stone_diff_4k.jpg');
+const groundNormalTexture = textureLoader.load('textures/groundStone/ground_stone_nor_gl_4k.jpg');
+const groundDisplacementTexture = textureLoader.load('textures/groundStone/ground_stone_disp_4k.jpg');
+const groundOcclusionTexture = textureLoader.load('textures/groundStone/ground_stone_ao_4k.jpg');
+const groundRoughnessTexture = textureLoader.load('textures/groundStone/ground_stone_rough_4k.jpg');
+
 const groundMaterial = new THREE.MeshStandardMaterial({
-    color: 0x66aa66
+    map: groundDiffuseTexture,
+    normalMap: groundNormalTexture,
+    displacementMap: groundDisplacementTexture,
+    aoMap: groundOcclusionTexture,
+    roughnessMap: groundRoughnessTexture
 });
 
 const ground = new THREE.Mesh(
