@@ -53,14 +53,12 @@ const groundGeometry = new THREE.PlaneGeometry(50, 50);
 
 const groundDiffuse = textureLoader.load('textures/groundStone/ground_stone_diff.jpg');
 const groundNormal = textureLoader.load('textures/groundStone/ground_stone_nor.jpg');
-const groundDisplacement = textureLoader.load('textures/groundStone/ground_stone_disp.jpg');
 const groundAmbientOcclusion = textureLoader.load('textures/groundStone/ground_stone_ao.jpg');
 const groundRoughness = textureLoader.load('textures/groundStone/ground_stone_rough.jpg');
 
 const groundMaterial = new THREE.MeshStandardMaterial({
     map: groundDiffuse,
     normalMap: groundNormal,
-    displacementMap: groundDisplacement,
     aoMap: groundAmbientOcclusion,
     roughnessMap: groundRoughness
 });
@@ -82,14 +80,12 @@ const wallGeometry = new THREE.BoxGeometry(50, 25, 1);
 
 const wallDiffuse = textureLoader.load('textures/wallStone/stone_wall_diff.jpg');
 const wallNormal = textureLoader.load('textures/wallStone/stone_wall_nor.jpg');
-const wallDisplacement = textureLoader.load('textures/wallStone/stone_wall_disp.jpg');
 const wallAmbientOcclusion = textureLoader.load('textures/wallStone/stone_wall_ao.jpg');
 const wallRoughness = textureLoader.load('textures/wallStone/stone_wall_rough.jpg');
 
 const wallMaterial = new THREE.MeshStandardMaterial({
     map: wallDiffuse,
     normalMap: wallNormal,
-    displacementMap: wallDisplacement,
     aoMap: wallAmbientOcclusion,
     roughnessMap: wallRoughness
 });
@@ -121,11 +117,6 @@ gateNormal.wrapS = THREE.RepeatWrapping;
 gateNormal.wrapT = THREE.RepeatWrapping;
 gateNormal.repeat.set(0.1, 0.1);
 
-const gateDisplacement = textureLoader.load('textures/gateWood/wood_cabinet_disp.jpg');
-gateDisplacement.wrapS = THREE.RepeatWrapping;
-gateDisplacement.wrapT = THREE.RepeatWrapping;
-gateDisplacement.repeat.set(0.1, 0.1);
-
 const gateAmbientOcclusion = textureLoader.load('textures/gateWood/wood_cabinet_ao.jpg');
 gateAmbientOcclusion.wrapS = THREE.RepeatWrapping;
 gateAmbientOcclusion.wrapT = THREE.RepeatWrapping;
@@ -139,13 +130,12 @@ gateRoughness.repeat.set(0.1, 0.1);
 const gateMaterial = new THREE.MeshStandardMaterial({
     map: gateDiffuse,
     normalMap: gateNormal,
-    displacementMap: gateDisplacement,
     aoMap: gateAmbientOcclusion,
     roughnessMap: gateRoughness
 });
 
 const gate = new THREE.Mesh(gateGeometry, gateMaterial);
-gate.position.z = -24.9;
+gate.position.z = -24.4;
 
 scene.add(gate);
 
@@ -153,7 +143,20 @@ scene.add(gate);
 // Crate
 // ----------------------------------------------------
 const crateGeometry = new THREE.BoxGeometry(4, 4, 4);
-const crateMaterial = new THREE.MeshStandardMaterial({color: 0xaa5500});
+
+const crateDiffuse = textureLoader.load('textures/crateWood/wooden_barrel_diff.jpg');
+const crateNormal = textureLoader.load('textures/crateWood/wooden_barrel_nor.jpg');
+const crateAmbientOcclusion = textureLoader.load('textures/crateWood/wooden_barrel_ao.jpg');
+const crateRoughness = textureLoader.load('textures/crateWood/wooden_barrel_rough.jpg');
+const crateMetalness = textureLoader.load('textures/crateWood/wooden_barrel_arm.jpg');
+
+const crateMaterial = new THREE.MeshStandardMaterial({
+    map: crateDiffuse,
+    normalMap: crateNormal,
+    aoMap: crateAmbientOcclusion,
+    roughnessMap: crateRoughness,
+    metalnessMap: crateMetalness
+});
 
 const crate = new THREE.Mesh(crateGeometry, crateMaterial);
 crate.position.y = 2;
