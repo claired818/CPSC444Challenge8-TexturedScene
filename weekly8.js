@@ -51,18 +51,18 @@ const textureLoader = new THREE.TextureLoader();
 // ----------------------------------------------------
 const groundGeometry = new THREE.PlaneGeometry(50, 50);
 
-const groundDiffuseTexture = textureLoader.load('textures/groundStone/ground_stone_diff_4k.jpg');
-const groundNormalTexture = textureLoader.load('textures/groundStone/ground_stone_nor_gl_4k.jpg');
-const groundDisplacementTexture = textureLoader.load('textures/groundStone/ground_stone_disp_4k.jpg');
-const groundOcclusionTexture = textureLoader.load('textures/groundStone/ground_stone_ao_4k.jpg');
-const groundRoughnessTexture = textureLoader.load('textures/groundStone/ground_stone_rough_4k.jpg');
+const groundDiffuse = textureLoader.load('textures/groundStone/ground_stone_diff.jpg');
+const groundNormal = textureLoader.load('textures/groundStone/ground_stone_nor.jpg');
+const groundDisplacement = textureLoader.load('textures/groundStone/ground_stone_disp.jpg');
+const groundAmbientOcclusion = textureLoader.load('textures/groundStone/ground_stone_ao.jpg');
+const groundRoughness = textureLoader.load('textures/groundStone/ground_stone_rough.jpg');
 
 const groundMaterial = new THREE.MeshStandardMaterial({
-    map: groundDiffuseTexture,
-    normalMap: groundNormalTexture,
-    displacementMap: groundDisplacementTexture,
-    aoMap: groundOcclusionTexture,
-    roughnessMap: groundRoughnessTexture
+    map: groundDiffuse,
+    normalMap: groundNormal,
+    displacementMap: groundDisplacement,
+    aoMap: groundAmbientOcclusion,
+    roughnessMap: groundRoughness
 });
 
 const ground = new THREE.Mesh(
@@ -79,7 +79,20 @@ scene.add(ground);
 // Stone Wall
 // ----------------------------------------------------
 const wallGeometry = new THREE.BoxGeometry(50, 25, 1);
-const wallMaterial = new THREE.MeshStandardMaterial({color: 0xaaaaaa});
+
+const wallDiffuse = textureLoader.load('textures/wallStone/stone_wall_diff.jpg');
+const wallNormal = textureLoader.load('textures/wallStone/stone_wall_nor.jpg');
+const wallDisplacement = textureLoader.load('textures/wallStone/stone_wall_disp.jpg');
+const wallAmbientOcclusion = textureLoader.load('textures/wallStone/stone_wall_ao.jpg');
+const wallRoughness = textureLoader.load('textures/wallStone/stone_wall_rough.jpg');
+
+const wallMaterial = new THREE.MeshStandardMaterial({
+    map: wallDiffuse,
+    normalMap: wallNormal,
+    displacementMap: wallDisplacement,
+    aoMap: wallAmbientOcclusion,
+    roughnessMap: wallRoughness
+});
 
 const wall = new THREE.Mesh(wallGeometry, wallMaterial);
 wall.position.set(0, 12.5, -25);
@@ -100,7 +113,7 @@ const gateGeometry = new THREE.ShapeGeometry(gateShape);
 const gateMaterial = new THREE.MeshStandardMaterial({color: 0xaa5500});
 
 const gate = new THREE.Mesh(gateGeometry, gateMaterial);
-gate.position.z = -24.4;
+gate.position.z = -24;
 
 scene.add(gate);
 
