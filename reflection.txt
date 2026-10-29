@@ -1,0 +1,12 @@
+1. Which textures did you choose and why?
+	I chose textures that I thought would show the difference between flat versus "3D" materials.
+2. How did normal maps improve your scene?
+	The normal maps provided the most improvement to the textures. They added shadows and highlights that really gave the textures a 3D appearance.
+3. Which object benefited the most from texture mapping?
+	I think the stone wall benfitted the most from texture mapping.
+4. What effect did roughness maps have on lighting?
+	It might just be the textures I chose, but I think the roughness maps had the least amount of impact.
+5. Did texture tiling improve or hurt realism?
+	Messing with the texture tiling greatly improved the realism of the scene. Some of the textures initially duplicate way too many times, making the textures look too small and not really visible.
+6. If you had more time, what additional textures would you add?
+	If I had more time, I might add additional textures to the ground to give it more variety so it looks more natural.
