@@ -175,7 +175,33 @@ const bannerShape = new THREE.Shape()
     .lineTo(-3, 8)
 ;
 const bannerGeometry = new THREE.ExtrudeGeometry(bannerShape);
-const bannerMaterial = new THREE.MeshStandardMaterial({color: 0xaa0000});
+
+const bannerDiffuse = textureLoader.load('textures/bannerCloth/velour_velvet_diff.jpg');
+bannerDiffuse.wrapS = THREE.RepeatWrapping;
+bannerDiffuse.wrapT = THREE.RepeatWrapping;
+bannerDiffuse.repeat.set(0.05, 0.05);
+
+const bannerNormal = textureLoader.load('textures/bannerCloth/velour_velvet_nor.jpg');
+bannerNormal.wrapS = THREE.RepeatWrapping;
+bannerNormal.wrapT = THREE.RepeatWrapping;
+bannerNormal.repeat.set(0.05, 0.05);
+
+const bannerAmbientOcclusion = textureLoader.load('textures/bannerCloth/velour_velvet_ao.jpg');
+bannerAmbientOcclusion.wrapS = THREE.RepeatWrapping;
+bannerAmbientOcclusion.wrapT = THREE.RepeatWrapping;
+bannerAmbientOcclusion.repeat.set(0.05, 0.05);
+
+const bannerRoughness = textureLoader.load('textures/bannerCloth/velour_velvet_rough.jpg');
+bannerRoughness.wrapS = THREE.RepeatWrapping;
+bannerRoughness.wrapT = THREE.RepeatWrapping;
+bannerRoughness.repeat.set(0.05, 0.05);
+
+const bannerMaterial = new THREE.MeshStandardMaterial({
+    map: bannerDiffuse,
+    normalMap: bannerNormal,
+    aoMap: bannerAmbientOcclusion,
+    roughnessMap: bannerRoughness
+});
 
 const banner = new THREE.Mesh(bannerGeometry, bannerMaterial);
 banner.position.set(-14, 10, -25);
