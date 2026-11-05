@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 // ----------------------------------------------------
 // Scene
@@ -45,6 +46,11 @@ controls.dampingFactor = 0.05;
 // Texture Loader
 // ----------------------------------------------------
 const textureLoader = new THREE.TextureLoader();
+
+// ----------------------------------------------------
+// GLTF Loader
+// ----------------------------------------------------
+const modelLoader = new GLTFLoader();
 
 // ----------------------------------------------------
 // Ground Plane
@@ -92,6 +98,8 @@ const wallMaterial = new THREE.MeshStandardMaterial({
 
 const wall = new THREE.Mesh(wallGeometry, wallMaterial);
 wall.position.set(0, 12.5, -25);
+wall.castShadow = true;
+wall.receiveShadow = true;
 
 scene.add(wall);
 
@@ -136,6 +144,7 @@ const gateMaterial = new THREE.MeshStandardMaterial({
 
 const gate = new THREE.Mesh(gateGeometry, gateMaterial);
 gate.position.z = -24.4;
+gate.receiveShadow = true;
 
 scene.add(gate);
 
@@ -160,6 +169,8 @@ const crateMaterial = new THREE.MeshStandardMaterial({
 
 const crate = new THREE.Mesh(crateGeometry, crateMaterial);
 crate.position.y = 2;
+crate.castShadow = true;
+crate.receiveShadow = true;
 
 scene.add(crate);
 
@@ -205,8 +216,23 @@ const bannerMaterial = new THREE.MeshStandardMaterial({
 
 const banner = new THREE.Mesh(bannerGeometry, bannerMaterial);
 banner.position.set(-14, 10, -25);
+banner.receiveShadow = true;
 
 scene.add(banner);
+
+// ----------------------------------------------------
+// Wall Flags
+// ----------------------------------------------------
+for (let i = -21; i <= 21; i += 7) {
+    modelLoader.load("models/Flag_by_Quaternius.glb", (gltf)=> {
+        const flag = gltf.scene;
+        flag.position.set(i, 25, -25);
+        flag.rotation.y = Math.PI * 0.25 * i;
+        flag.scale.set(2, 2, 2);
+
+        scene.add(flag);
+    });
+}
 
 // ----------------------------------------------------
 // Ambient Light
@@ -223,7 +249,7 @@ scene.add(ambientLight);
 // ----------------------------------------------------
 const directionalLight = new THREE.DirectionalLight(
     0xffffff,
-    2
+    1
 );
 
 directionalLight.position.set(20, 30, 10);
