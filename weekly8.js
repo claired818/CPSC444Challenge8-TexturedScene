@@ -82,7 +82,7 @@ scene.add(ground);
 // ----------------------------------------------------
 // Stone Wall
 // ----------------------------------------------------
-const wallGeometry = new THREE.BoxGeometry(50, 25, 1);
+const wallGeometry = new THREE.BoxGeometry(30, 20, 15);
 
 const wallDiffuse = textureLoader.load('textures/wallStone/stone_wall_diff.jpg');
 const wallNormal = textureLoader.load('textures/wallStone/stone_wall_nor.jpg');
@@ -97,11 +97,33 @@ const wallMaterial = new THREE.MeshStandardMaterial({
 });
 
 const wall = new THREE.Mesh(wallGeometry, wallMaterial);
-wall.position.set(0, 12.5, -25);
+wall.position.set(0, 10, -17.5);
 wall.castShadow = true;
 wall.receiveShadow = true;
 
 scene.add(wall);
+
+const turretGeometry = new THREE.CylinderGeometry(5, 5, 30);
+const turretMaterial = new THREE.MeshStandardMaterial({
+    map: wallDiffuse,
+    normalMap: wallNormal,
+    aoMap: wallAmbientOcclusion,
+    roughnessMap: wallRoughness
+});
+
+const turret1 = new THREE.Mesh(turretGeometry, turretMaterial);
+turret1.position.set(-18, 15, -17.5);
+turret1.castShadow = true;
+turret1.receiveShadow = true;
+
+scene.add(turret1);
+
+const turret2 = new THREE.Mesh(turretGeometry, turretMaterial);
+turret2.position.set(18, 15, -17.5);
+turret2.castShadow = true;
+turret2.receiveShadow = true;
+
+scene.add(turret2);
 
 // ----------------------------------------------------
 // Gate
@@ -113,7 +135,7 @@ const gateShape = new THREE.Shape()
     .absarc(0, 10, 5, 0, Math.PI)
     .lineTo(-5,0)
 ;
-const gateGeometry = new THREE.ShapeGeometry(gateShape);
+const gateGeometry = new THREE.ExtrudeGeometry(gateShape, {depth: 0.5});
 
 const gateDiffuse = textureLoader.load('textures/gateWood/wood_cabinet_diff.jpg');
 gateDiffuse.wrapS = THREE.RepeatWrapping;
@@ -143,7 +165,7 @@ const gateMaterial = new THREE.MeshStandardMaterial({
 });
 
 const gate = new THREE.Mesh(gateGeometry, gateMaterial);
-gate.position.z = -24.4;
+gate.position.z = -10;
 gate.receiveShadow = true;
 
 scene.add(gate);
@@ -167,25 +189,39 @@ const crateMaterial = new THREE.MeshStandardMaterial({
     metalnessMap: crateMetalness
 });
 
-const crate = new THREE.Mesh(crateGeometry, crateMaterial);
-crate.position.y = 2;
-crate.castShadow = true;
-crate.receiveShadow = true;
+const crate1 = new THREE.Mesh(crateGeometry, crateMaterial);
+crate1.position.y = 2;
+crate1.castShadow = true;
+crate1.receiveShadow = true;
 
-scene.add(crate);
+scene.add(crate1);
+
+const crate2 = new THREE.Mesh(crateGeometry, crateMaterial);
+crate2.position.set(-15, 2, 12);
+crate2.castShadow = true;
+crate2.receiveShadow = true;
+
+scene.add(crate2);
+
+const crate3 = new THREE.Mesh(crateGeometry, crateMaterial);
+crate3.position.set(12, 2, 20);
+crate3.castShadow = true;
+crate3.receiveShadow = true;
+
+scene.add(crate3);
 
 // ----------------------------------------------------
 // Banner
 // ----------------------------------------------------
 const bannerShape = new THREE.Shape()
-    .moveTo(-3, 8)
-    .lineTo(3, 8)
-    .lineTo(3, 0)
-    .lineTo(0, 4)
-    .lineTo(-3, 0)
-    .lineTo(-3, 8)
+    .moveTo(-1.5, 4)
+    .lineTo(1.5, 4)
+    .lineTo(1.5, 0)
+    .lineTo(0, 2)
+    .lineTo(-1.5, 0)
+    .lineTo(-1.5, 4)
 ;
-const bannerGeometry = new THREE.ExtrudeGeometry(bannerShape);
+const bannerGeometry = new THREE.ExtrudeGeometry(bannerShape, {depth: 0.25});
 
 const bannerDiffuse = textureLoader.load('textures/bannerCloth/velour_velvet_diff.jpg');
 bannerDiffuse.wrapS = THREE.RepeatWrapping;
@@ -214,19 +250,21 @@ const bannerMaterial = new THREE.MeshStandardMaterial({
     roughnessMap: bannerRoughness
 });
 
-const banner = new THREE.Mesh(bannerGeometry, bannerMaterial);
-banner.position.set(-14, 10, -25);
-banner.receiveShadow = true;
+for (let i = -13.25; i <= 13.25; i += 3.3) {
+    const banner = new THREE.Mesh(bannerGeometry, bannerMaterial);
+    banner.position.set(i, 15.8, -10.2);
+    banner.receiveShadow = true;
 
-scene.add(banner);
+    scene.add(banner);
+}
 
 // ----------------------------------------------------
 // Wall Flags
 // ----------------------------------------------------
-for (let i = -21; i <= 21; i += 7) {
+for (let i = -11; i <= 11; i += 5.5) {
     modelLoader.load("models/Flag_by_Quaternius.glb", (gltf)=> {
         const flag = gltf.scene;
-        flag.position.set(i, 25, -25);
+        flag.position.set(i, 20, -17.5);
         flag.rotation.y = Math.PI * 0.25 * i;
         flag.scale.set(2, 2, 2);
 
@@ -238,7 +276,7 @@ for (let i = -21; i <= 21; i += 7) {
 // Ambient Light
 // ----------------------------------------------------
 const ambientLight = new THREE.AmbientLight(
-    0xffffff,
+    0xeeeeee,
     1
 );
 
