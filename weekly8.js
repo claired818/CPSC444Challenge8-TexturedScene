@@ -311,7 +311,7 @@ for (let i = -11; i <= 11; i += 5.5) {
 // King
 // ----------------------------------------------------
 const clock = new THREE.Clock();
-let mixer;
+let kingMixer;
 let kingDirection = 1;
 let king;
 
@@ -323,9 +323,31 @@ modelLoader.load("models/King by Quaternius.glb", (gltf)=> {
 
     scene.add(king);
 
-    mixer = new THREE.AnimationMixer(king);
-    const action = mixer.clipAction(gltf.animations[22]);
+    kingMixer = new THREE.AnimationMixer(king);
+    const action = kingMixer.clipAction(gltf.animations[22]);
     action.play();
+});
+
+// ----------------------------------------------------
+// Player Character
+// ----------------------------------------------------
+let pcMixer;
+let pcDirection = 1;
+let pc;
+let pcIdle;
+let pcWalk;
+
+modelLoader.load("models/Hooded Adventurer by Quaternius.glb", (gltf)=> {
+    pc = gltf.scene;
+    pc.position.set(0, 0, 5);
+    pc.scale.set(4, 4, 4);
+
+    scene.add(pc);
+
+    pcMixer = new THREE.AnimationMixer(pc);
+    pcIdle = pcMixer.clipAction(gltf.animations[4]);
+    pcWalk = pcMixer.clipAction(gltf.animations[22]);
+    pcIdle.play();
 });
 
 // ----------------------------------------------------
@@ -382,6 +404,18 @@ window.addEventListener("resize", () => {
     );
 });
 
+const keys = {};
+window.addEventListener('keydown', (e) => {
+    keys[e.key] = true;
+    pcIdle.stop();
+    pcWalk.play();
+});
+window.addEventListener('keyup', (e) => {
+    keys[e.key] = false;
+    pcWalk.stop();
+    pcIdle.play();
+});
+
 // ----------------------------------------------------
 // Animation Loop
 // ----------------------------------------------------
@@ -389,14 +423,34 @@ function animate() {
 
     requestAnimationFrame(animate);
     const delta = clock.getDelta();
-    if (mixer) {
-        mixer.update(delta);
+    if (kingMixer) {
+        kingMixer.update(delta);
+    }
+    if (pcMixer) {
+        pcMixer.update(delta);
     }
 
     king.position.x += 0.05 * kingDirection;
     if (king.position.x > 20 || king.position.x < -20) {
         kingDirection *= -1;
         king.rotation.y += Math.PI;
+    }
+
+    if(keys["ArrowUp"] || keys["w"]) {
+        pc.position.z -= 0.1;
+        pc.rotation.y = Math.PI;
+    }
+    if(keys["ArrowDown"] || keys["s"]) {
+        pc.position.z += 0.1;
+        pc.rotation.y = 0;
+    }
+    if(keys["ArrowLeft"] || keys["a"]) {
+        pc.position.x -= 0.1;
+        pc.rotation.y = Math.PI * 1.5;
+    }
+    if(keys["ArrowRight"] || keys["d"]) {
+        pc.position.x += 0.1;
+        pc.rotation.y = Math.PI * 0.5;
     }
 
     controls.update();
