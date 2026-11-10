@@ -170,6 +170,8 @@ gate.receiveShadow = true;
 
 scene.add(gate);
 
+let obstacles = [];
+
 // ----------------------------------------------------
 // Crate
 // ----------------------------------------------------
@@ -195,6 +197,7 @@ crate1.castShadow = true;
 crate1.receiveShadow = true;
 
 scene.add(crate1);
+obstacles.push(crate1);
 
 const crate2 = new THREE.Mesh(crateGeometry, crateMaterial);
 crate2.position.set(-15, 2, 12);
@@ -202,6 +205,7 @@ crate2.castShadow = true;
 crate2.receiveShadow = true;
 
 scene.add(crate2);
+obstacles.push(crate2);
 
 const crate3 = new THREE.Mesh(crateGeometry, crateMaterial);
 crate3.position.set(12, 2, 20);
@@ -209,6 +213,37 @@ crate3.castShadow = true;
 crate3.receiveShadow = true;
 
 scene.add(crate3);
+obstacles.push(crate3);
+
+// ----------------------------------------------------
+// Barrels
+// ----------------------------------------------------
+modelLoader.load("models/Barrel by Quaternius.glb", (gltf)=> {
+    const barrel = gltf.scene;
+    barrel.position.set(-5, 0, 20);
+    barrel.scale.set(7, 7, 7);
+
+    scene.add(barrel);
+    obstacles.push(barrel);
+});
+
+modelLoader.load("models/Barrel by Quaternius.glb", (gltf)=> {
+    const barrel = gltf.scene;
+    barrel.position.set(16, 0, 5);
+    barrel.scale.set(7, 7, 7);
+
+    scene.add(barrel);
+    obstacles.push(barrel);
+});
+
+modelLoader.load("models/Barrel by Quaternius.glb", (gltf)=> {
+    const barrel = gltf.scene;
+    barrel.position.set(-10, 0, 2);
+    barrel.scale.set(7, 7, 7);
+
+    scene.add(barrel);
+    obstacles.push(barrel);
+});
 
 // ----------------------------------------------------
 // Banner
