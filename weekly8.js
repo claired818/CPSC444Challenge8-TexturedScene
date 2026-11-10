@@ -273,6 +273,27 @@ for (let i = -11; i <= 11; i += 5.5) {
 }
 
 // ----------------------------------------------------
+// King
+// ----------------------------------------------------
+const clock = new THREE.Clock();
+let mixer;
+let kingDirection = 1;
+let king;
+
+modelLoader.load("models/King by Quaternius.glb", (gltf)=> {
+    king = gltf.scene;
+    king.position.set(0, 0, -5);
+    king.scale.set(4, 4, 4);
+    king.rotation.y = Math.PI * 0.5;
+
+    scene.add(king);
+
+    mixer = new THREE.AnimationMixer(king);
+    const action = mixer.clipAction(gltf.animations[22]);
+    action.play();
+});
+
+// ----------------------------------------------------
 // Ambient Light
 // ----------------------------------------------------
 const ambientLight = new THREE.AmbientLight(
@@ -332,6 +353,16 @@ window.addEventListener("resize", () => {
 function animate() {
 
     requestAnimationFrame(animate);
+    const delta = clock.getDelta();
+    if (mixer) {
+        mixer.update(delta);
+    }
+
+    king.position.x += 0.05 * kingDirection;
+    if (king.position.x > 20 || king.position.x < -20) {
+        kingDirection *= -1;
+        king.rotation.y += Math.PI;
+    }
 
     controls.update();
 
