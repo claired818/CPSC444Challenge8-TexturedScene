@@ -311,9 +311,9 @@ for (let i = -11; i <= 11; i += 5.5) {
 // King
 // ----------------------------------------------------
 const clock = new THREE.Clock();
-let kingMixer;
 let kingDirection = 1;
-let king;
+let kingMixer, king, kingWalk, kingDie;
+let kingDead = false;
 
 modelLoader.load("models/King by Quaternius.glb", (gltf)=> {
     king = gltf.scene;
@@ -324,18 +324,20 @@ modelLoader.load("models/King by Quaternius.glb", (gltf)=> {
     scene.add(king);
 
     kingMixer = new THREE.AnimationMixer(king);
-    const action = kingMixer.clipAction(gltf.animations[22]);
-    action.play();
+    kingDie = kingMixer.clipAction(gltf.animations[0]);
+    kingDie.loop = THREE.LoopOnce;
+    kingDie.clampWhenFinished = true;
+    kingWalk = kingMixer.clipAction(gltf.animations[22]);
+    kingWalk.play();
 });
+
+const kingBox = new THREE.Box3();
 
 // ----------------------------------------------------
 // Player Character
 // ----------------------------------------------------
-let pcMixer;
-let pcDirection = 1;
-let pc;
-let pcIdle;
-let pcWalk;
+let pcSpeed = 0.1;
+let pcMixer, pc, pcIdle, pcWalk;
 
 modelLoader.load("models/Hooded Adventurer by Quaternius.glb", (gltf)=> {
     pc = gltf.scene;
@@ -349,6 +351,8 @@ modelLoader.load("models/Hooded Adventurer by Quaternius.glb", (gltf)=> {
     pcWalk = pcMixer.clipAction(gltf.animations[22]);
     pcIdle.play();
 });
+
+const pcBox = new THREE.Box3();
 
 // ----------------------------------------------------
 // Ambient Light
@@ -407,8 +411,6 @@ window.addEventListener("resize", () => {
 const keys = {};
 window.addEventListener('keydown', (e) => {
     keys[e.key] = true;
-    pcIdle.stop();
-    pcWalk.play();
 });
 window.addEventListener('keyup', (e) => {
     keys[e.key] = false;
@@ -430,26 +432,82 @@ function animate() {
         pcMixer.update(delta);
     }
 
-    king.position.x += 0.05 * kingDirection;
+    king.position.x += 0.07 * kingDirection;
     if (king.position.x > 20 || king.position.x < -20) {
         kingDirection *= -1;
         king.rotation.y += Math.PI;
     }
 
+    kingBox.min.set(king.position.x - 1.75, 0, king.position.z - 1.75);
+    kingBox.max.set(king.position.x + 1.75, king.position.y + 7.4, king.position.z + 1.75);
+
+    pcBox.min.set(pc.position.x - 1.75, 0, pc.position.z - 1.75);
+    pcBox.max.set(pc.position.x + 1.75, pc.position.y + 7.4, pc.position.z + 1.75);
+
+    let intersected = false;
+    obstacles.forEach((obstacle) => {
+        const obstacleBox = new THREE.Box3();
+
+        obstacleBox.setFromObject(obstacle);
+
+        if (!intersected) {
+            intersected = pcBox.intersectsBox(obstacleBox);
+        }
+    });
+
+    if (pcBox.intersectsBox(kingBox)) {
+        kingDirection = 0;
+        kingWalk.stop();
+        kingDie.play();
+        kingDead = true;
+    }
+
+    // if (kingDead) {
+    //     kingDie.time = kingDie.getClip().duration - 0.25;
+    // }
+
     if(keys["ArrowUp"] || keys["w"]) {
-        pc.position.z -= 0.1;
+        pcIdle.stop();
+        pcWalk.play();
+        
+        if (!intersected && pc.position.z > -7) {
+            pc.position.z -= pcSpeed;
+        } else {
+            pc.position.z += pcSpeed * 10;
+        }
         pc.rotation.y = Math.PI;
     }
     if(keys["ArrowDown"] || keys["s"]) {
-        pc.position.z += 0.1;
+        pcIdle.stop();
+        pcWalk.play();
+
+        if (!intersected && pc.position.z < 23) {
+            pc.position.z += pcSpeed;
+        } else {
+            pc.position.z -= pcSpeed * 10;
+        }
         pc.rotation.y = 0;
     }
     if(keys["ArrowLeft"] || keys["a"]) {
-        pc.position.x -= 0.1;
+        pcIdle.stop();
+        pcWalk.play();
+        
+        if (!intersected && pc.position.x > -23) {
+            pc.position.x -= pcSpeed;
+        } else {
+            pc.position.x += pcSpeed * 10;
+        }
         pc.rotation.y = Math.PI * 1.5;
     }
     if(keys["ArrowRight"] || keys["d"]) {
-        pc.position.x += 0.1;
+        pcIdle.stop();
+        pcWalk.play();
+
+        if (!intersected && pc.position.x < 23) {
+            pc.position.x += pcSpeed;
+        } else {
+            pc.position.x -= pcSpeed * 10;
+        }
         pc.rotation.y = Math.PI * 0.5;
     }
 
