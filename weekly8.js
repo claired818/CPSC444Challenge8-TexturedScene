@@ -171,6 +171,7 @@ gate.receiveShadow = true;
 scene.add(gate);
 
 let obstacles = [];
+let coins = [];
 
 // ----------------------------------------------------
 // Crate
@@ -199,6 +200,15 @@ crate1.receiveShadow = true;
 scene.add(crate1);
 obstacles.push(crate1);
 
+modelLoader.load("models/Coin Piles by Quaternius.glb", (gltf)=> {
+    const coin = gltf.scene;
+    coin.position.y = 4;
+    coin.scale.set(20, 20, 20);
+
+    scene.add(coin);
+    coins.push(coin);
+});
+
 const crate2 = new THREE.Mesh(crateGeometry, crateMaterial);
 crate2.position.set(-15, 2, 12);
 crate2.castShadow = true;
@@ -207,6 +217,16 @@ crate2.receiveShadow = true;
 scene.add(crate2);
 obstacles.push(crate2);
 
+modelLoader.load("models/Coin Piles by Quaternius.glb", (gltf)=> {
+    const coin = gltf.scene;
+    coin.position.set(-15, 4, 12);
+    coin.scale.set(20, 20, 20);
+    coin.rotation.y = Math.PI * 0.25;
+
+    scene.add(coin);
+    coins.push(coin);
+});
+
 const crate3 = new THREE.Mesh(crateGeometry, crateMaterial);
 crate3.position.set(12, 2, 20);
 crate3.castShadow = true;
@@ -214,6 +234,16 @@ crate3.receiveShadow = true;
 
 scene.add(crate3);
 obstacles.push(crate3);
+
+modelLoader.load("models/Coin Piles by Quaternius.glb", (gltf)=> {
+    const coin = gltf.scene;
+    coin.position.set(12, 4, 20);
+    coin.scale.set(20, 20, 20);
+    coin.rotation.y = Math.PI * 0.5;
+
+    scene.add(coin);
+    coins.push(coin);
+});
 
 // ----------------------------------------------------
 // Barrels
@@ -227,6 +257,16 @@ modelLoader.load("models/Barrel by Quaternius.glb", (gltf)=> {
     obstacles.push(barrel);
 });
 
+modelLoader.load("models/Coin Piles by Quaternius.glb", (gltf)=> {
+    const coin = gltf.scene;
+    coin.position.set(-5, 4.5, 20);
+    coin.scale.set(20, 20, 20);
+    coin.rotation.y = Math.PI * 0.75;
+
+    scene.add(coin);
+    coins.push(coin);
+});
+
 modelLoader.load("models/Barrel by Quaternius.glb", (gltf)=> {
     const barrel = gltf.scene;
     barrel.position.set(16, 0, 5);
@@ -236,6 +276,16 @@ modelLoader.load("models/Barrel by Quaternius.glb", (gltf)=> {
     obstacles.push(barrel);
 });
 
+modelLoader.load("models/Coin Piles by Quaternius.glb", (gltf)=> {
+    const coin = gltf.scene;
+    coin.position.set(16, 4.5, 5);
+    coin.scale.set(20, 20, 20);
+    coin.rotation.y = Math.PI;
+
+    scene.add(coin);
+    coins.push(coin);
+});
+
 modelLoader.load("models/Barrel by Quaternius.glb", (gltf)=> {
     const barrel = gltf.scene;
     barrel.position.set(-10, 0, 2);
@@ -243,6 +293,16 @@ modelLoader.load("models/Barrel by Quaternius.glb", (gltf)=> {
 
     scene.add(barrel);
     obstacles.push(barrel);
+});
+
+modelLoader.load("models/Coin Piles by Quaternius.glb", (gltf)=> {
+    const coin = gltf.scene;
+    coin.position.set(-10, 4.5, 2);
+    coin.scale.set(20, 20, 20);
+    coin.rotation.y = Math.PI * 1.25;
+
+    scene.add(coin);
+    coins.push(coin);
 });
 
 // ----------------------------------------------------
