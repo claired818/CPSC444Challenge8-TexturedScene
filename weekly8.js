@@ -176,7 +176,7 @@ let coins = [];
 // ----------------------------------------------------
 // Crate
 // ----------------------------------------------------
-const crateGeometry = new THREE.BoxGeometry(4, 4, 4);
+const crateGeometry = new THREE.BoxGeometry(4.5, 4.5, 4.5);
 
 const crateDiffuse = textureLoader.load('textures/crateWood/wooden_barrel_diff.jpg');
 const crateNormal = textureLoader.load('textures/crateWood/wooden_barrel_nor.jpg');
@@ -202,7 +202,7 @@ obstacles.push(crate1);
 
 modelLoader.load("models/Coin Piles by Quaternius.glb", (gltf)=> {
     const coin = gltf.scene;
-    coin.position.y = 4;
+    coin.position.y = 4.5;
     coin.scale.set(20, 20, 20);
 
     scene.add(coin);
@@ -219,7 +219,7 @@ obstacles.push(crate2);
 
 modelLoader.load("models/Coin Piles by Quaternius.glb", (gltf)=> {
     const coin = gltf.scene;
-    coin.position.set(-15, 4, 12);
+    coin.position.set(-15, 4.5, 12);
     coin.scale.set(20, 20, 20);
     coin.rotation.y = Math.PI * 0.25;
 
@@ -237,7 +237,7 @@ obstacles.push(crate3);
 
 modelLoader.load("models/Coin Piles by Quaternius.glb", (gltf)=> {
     const coin = gltf.scene;
-    coin.position.set(12, 4, 20);
+    coin.position.set(12, 4.5, 20);
     coin.scale.set(20, 20, 20);
     coin.rotation.y = Math.PI * 0.5;
 
@@ -396,23 +396,23 @@ const kingBox = new THREE.Box3();
 // ----------------------------------------------------
 // Player Character
 // ----------------------------------------------------
-let pcSpeed = 0.1;
-let pcMixer, pc, pcIdle, pcWalk;
+let playerSpeed = 0.1;
+let playerMixer, player, playerIdle, playerWalk;
 
 modelLoader.load("models/Hooded Adventurer by Quaternius.glb", (gltf)=> {
-    pc = gltf.scene;
-    pc.position.set(0, 0, 5);
-    pc.scale.set(4, 4, 4);
+    player = gltf.scene;
+    player.position.set(0, 0, 5);
+    player.scale.set(4, 4, 4);
 
-    scene.add(pc);
+    scene.add(player);
 
-    pcMixer = new THREE.AnimationMixer(pc);
-    pcIdle = pcMixer.clipAction(gltf.animations[4]);
-    pcWalk = pcMixer.clipAction(gltf.animations[22]);
-    pcIdle.play();
+    playerMixer = new THREE.AnimationMixer(player);
+    playerIdle = playerMixer.clipAction(gltf.animations[4]);
+    playerWalk = playerMixer.clipAction(gltf.animations[22]);
+    playerIdle.play();
 });
 
-const pcBox = new THREE.Box3();
+const playerBox = new THREE.Box3();
 
 // ----------------------------------------------------
 // Ambient Light
@@ -437,6 +437,8 @@ directionalLight.castShadow = true;
 
 scene.add(directionalLight);
 
+const raycaster = new THREE.Raycaster();
+
 // ----------------------------------------------------
 // Window Resize
 // ----------------------------------------------------
@@ -459,8 +461,8 @@ window.addEventListener('keydown', (e) => {
 });
 window.addEventListener('keyup', (e) => {
     keys[e.key] = false;
-    pcWalk.stop();
-    pcIdle.play();
+    playerWalk.stop();
+    playerIdle.play();
 });
 
 // ----------------------------------------------------
@@ -473,8 +475,8 @@ function animate() {
     if (kingMixer) {
         kingMixer.update(delta);
     }
-    if (pcMixer) {
-        pcMixer.update(delta);
+    if (playerMixer) {
+        playerMixer.update(delta);
     }
 
     king.position.x += 0.07 * kingDirection;
@@ -486,8 +488,8 @@ function animate() {
     kingBox.min.set(king.position.x - 1.75, 0, king.position.z - 1.75);
     kingBox.max.set(king.position.x + 1.75, king.position.y + 7.4, king.position.z + 1.75);
 
-    pcBox.min.set(pc.position.x - 1.75, 0, pc.position.z - 1.75);
-    pcBox.max.set(pc.position.x + 1.75, pc.position.y + 7.4, pc.position.z + 1.75);
+    playerBox.min.set(player.position.x - 1.75, 0, player.position.z - 1.75);
+    playerBox.max.set(player.position.x + 1.75, player.position.y + 7.4, player.position.z + 1.75);
 
     let intersected = false;
     obstacles.forEach((obstacle) => {
@@ -496,69 +498,103 @@ function animate() {
         obstacleBox.setFromObject(obstacle);
 
         if (!intersected) {
-            intersected = pcBox.intersectsBox(obstacleBox);
+            intersected = playerBox.intersectsBox(obstacleBox);
         }
     });
 
-    if (pcBox.intersectsBox(kingBox)) {
+    if (playerBox.intersectsBox(kingBox)) {
         kingDirection = 0;
         kingWalk.stop();
         kingDie.play();
         kingDead = true;
     }
 
-    // if (kingDead) {
-    //     kingDie.time = kingDie.getClip().duration - 0.25;
-    // }
-
+    // Movement checks
     if(keys["ArrowUp"] || keys["w"]) {
-        pcIdle.stop();
-        pcWalk.play();
+        playerIdle.stop();
+        playerWalk.play();
         
-        if (!intersected && pc.position.z > -7) {
-            pc.position.z -= pcSpeed;
+        if (!intersected && player.position.z > -7) {
+            player.position.z -= playerSpeed;
         } else {
-            pc.position.z += pcSpeed * 10;
+            player.position.z += playerSpeed * 10;
         }
-        pc.rotation.y = Math.PI;
+        player.rotation.y = Math.PI;
     }
     if(keys["ArrowDown"] || keys["s"]) {
-        pcIdle.stop();
-        pcWalk.play();
+        playerIdle.stop();
+        playerWalk.play();
 
-        if (!intersected && pc.position.z < 23) {
-            pc.position.z += pcSpeed;
+        if (!intersected && player.position.z < 23) {
+            player.position.z += playerSpeed;
         } else {
-            pc.position.z -= pcSpeed * 10;
+            player.position.z -= playerSpeed * 10;
         }
-        pc.rotation.y = 0;
+        player.rotation.y = 0;
     }
     if(keys["ArrowLeft"] || keys["a"]) {
-        pcIdle.stop();
-        pcWalk.play();
+        playerIdle.stop();
+        playerWalk.play();
         
-        if (!intersected && pc.position.x > -23) {
-            pc.position.x -= pcSpeed;
+        if (!intersected && player.position.x > -23) {
+            player.position.x -= playerSpeed;
         } else {
-            pc.position.x += pcSpeed * 10;
+            player.position.x += playerSpeed * 10;
         }
-        pc.rotation.y = Math.PI * 1.5;
+        player.rotation.y = Math.PI * 1.5;
     }
     if(keys["ArrowRight"] || keys["d"]) {
-        pcIdle.stop();
-        pcWalk.play();
+        playerIdle.stop();
+        playerWalk.play();
 
-        if (!intersected && pc.position.x < 23) {
-            pc.position.x += pcSpeed;
+        if (!intersected && player.position.x < 23) {
+            player.position.x += playerSpeed;
         } else {
-            pc.position.x -= pcSpeed * 10;
+            player.position.x -= playerSpeed * 10;
         }
-        pc.rotation.y = Math.PI * 0.5;
+        player.rotation.y = Math.PI * 0.5;
+    }
+    
+    // Coin interaction check
+    if (keys["e"]) {
+        const direction = new THREE.Vector3(0, 0, 1).applyQuaternion(player.quaternion);
+
+        const hits = castRay(player.position, direction, coins);
+
+        if (hits.length > 0)
+        {
+            scene.background = new THREE.Color(0x00ff00);
+        } else {
+            scene.background = new THREE.Color(0x0000ff);
+        }
     }
 
     controls.update();
 
     renderer.render(scene, camera);
+}
+
+const rayLineMaterial = new THREE.LineBasicMaterial({ color: 0xff0000 });
+let rayLine;
+
+function castRay(origin, direction, objects) {
+    origin = origin.clone();
+    origin.y = 4.5;
+
+    raycaster.set(origin, direction);
+    const hits = raycaster.intersectObjects(objects, true);
+    const end = hits[0]?.point ?? origin.clone().addScaledVector(direction, 100);
+
+    if (rayLine) {
+        scene.remove(rayLine);
+        rayLine.geometry.dispose();
+    }
+
+    const geometry = new THREE.BufferGeometry().setFromPoints([origin, end]);
+    rayLine = new THREE.Line(geometry, rayLineMaterial);
+    scene.add(rayLine);
+
+    return hits;
 }
 
 animate();
