@@ -378,21 +378,6 @@ directionalLight.castShadow = true;
 scene.add(directionalLight);
 
 // ----------------------------------------------------
-// Toggle Lights
-// ----------------------------------------------------
-let lightsOn = true;
-
-document
-    .getElementById("toggleButton")
-    .addEventListener("click", () => {
-
-        lightsOn = !lightsOn;
-
-        ambientLight.visible = lightsOn;
-        directionalLight.visible = lightsOn;
-    });
-
-// ----------------------------------------------------
 // Window Resize
 // ----------------------------------------------------
 window.addEventListener("resize", () => {
