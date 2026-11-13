@@ -19,7 +19,7 @@ const camera = new THREE.PerspectiveCamera(
     1000
 );
 
-camera.position.set(20, 15, 20);
+camera.position.set(0, 20, 32);
 
 // ----------------------------------------------------
 // Renderer
@@ -432,7 +432,7 @@ const directionalLight = new THREE.DirectionalLight(
     1
 );
 
-directionalLight.position.set(20, 30, 10);
+directionalLight.position.set(0, 10, 20);
 directionalLight.castShadow = true;
 
 scene.add(directionalLight);
@@ -558,43 +558,20 @@ function animate() {
     // Coin interaction check
     if (keys["e"]) {
         const direction = new THREE.Vector3(0, 0, 1).applyQuaternion(player.quaternion);
+        coins.forEach((coin) => {
+            let origin = player.position.clone();
+            origin.y = 4.5
+            raycaster.set(origin, direction);
 
-        const hits = castRay(player.position, direction, coins);
-
-        if (hits.length > 0)
-        {
-            scene.background = new THREE.Color(0x00ff00);
-        } else {
-            scene.background = new THREE.Color(0x0000ff);
-        }
+            if (raycaster.intersectObject(coin, true).length > 0) {
+                scene.remove(coin);
+            }
+        });
     }
 
     controls.update();
 
     renderer.render(scene, camera);
-}
-
-const rayLineMaterial = new THREE.LineBasicMaterial({ color: 0xff0000 });
-let rayLine;
-
-function castRay(origin, direction, objects) {
-    origin = origin.clone();
-    origin.y = 4.5;
-
-    raycaster.set(origin, direction);
-    const hits = raycaster.intersectObjects(objects, true);
-    const end = hits[0]?.point ?? origin.clone().addScaledVector(direction, 100);
-
-    if (rayLine) {
-        scene.remove(rayLine);
-        rayLine.geometry.dispose();
-    }
-
-    const geometry = new THREE.BufferGeometry().setFromPoints([origin, end]);
-    rayLine = new THREE.Line(geometry, rayLineMaterial);
-    scene.add(rayLine);
-
-    return hits;
 }
 
 animate();
