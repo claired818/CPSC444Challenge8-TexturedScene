@@ -53,6 +53,33 @@ const textureLoader = new THREE.TextureLoader();
 const modelLoader = new GLTFLoader();
 
 // ----------------------------------------------------
+// Audio Listener
+// ----------------------------------------------------
+const audioListener = new THREE.AudioListener();
+camera.add(audioListener);
+const coinSound = new THREE.Audio(audioListener);
+const audioLoader = new THREE.AudioLoader();
+audioLoader.load("coins.mp3", function(buffer) {
+    coinSound.setBuffer(buffer);
+    coinSound.setVolume(5);
+    coinSound.offset = 1;
+    coinSound.duration = 1;
+});
+
+// ----------------------------------------------------
+// Coin Counter Message
+// ----------------------------------------------------
+const coinMessage = document.createElement("div");
+coinMessage.style.position = "fixed";
+coinMessage.style.top = "24px";
+coinMessage.style.left = "24px";
+coinMessage.style.fontFamily = "serif";
+coinMessage.style.fontSize = "24px";
+coinMessage.style.color = "#000000";
+coinMessage.style.zIndex = "10";
+document.body.appendChild(coinMessage);
+
+// ----------------------------------------------------
 // Ground Plane
 // ----------------------------------------------------
 const groundGeometry = new THREE.PlaneGeometry(50, 50);
@@ -468,6 +495,8 @@ window.addEventListener('keyup', (e) => {
 // ----------------------------------------------------
 // Animation Loop
 // ----------------------------------------------------
+let totalCoins = 6;
+
 function animate() {
 
     requestAnimationFrame(animate);
@@ -565,10 +594,15 @@ function animate() {
 
             let distance = Math.hypot(player.position.x - coin.position.x, player.position.z - coin.position.z);
             if (raycaster.intersectObject(coin, true).length > 0 && distance <= 7) {
+                coinSound.stop();
                 scene.remove(coin);
+                coins.splice(coins.indexOf(coin), 1);
+                coinSound.play();
             }
         });
     }
+
+    coinMessage.textContent = `Coins Collected: ${totalCoins - coins.length} / ${totalCoins}`;
 
     controls.update();
 
