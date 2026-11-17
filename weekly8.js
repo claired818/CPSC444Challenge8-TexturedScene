@@ -563,7 +563,8 @@ function animate() {
             origin.y = 4.5
             raycaster.set(origin, direction);
 
-            if (raycaster.intersectObject(coin, true).length > 0) {
+            let distance = Math.hypot(player.position.x - coin.position.x, player.position.z - coin.position.z);
+            if (raycaster.intersectObject(coin, true).length > 0 && distance <= 7) {
                 scene.remove(coin);
             }
         });
