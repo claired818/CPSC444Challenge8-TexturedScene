@@ -1,0 +1,12 @@
+1. What object did you make interactive using raycasting?
+    I chose to make the stacks of coins interactive using raycasting.
+2. How does raycasting differ from collision detection?
+    Collision detection is used to see if objects are touching. Raycasting is used to see if one object is facing the other.
+3. Why must a ray have both an origin and a direction?
+    Because a ray only goes in one direction, unlike a collision box that goes in all directions.
+4. What sound effect did you choose and why?
+    I chose the sound of coins hitting together to go with my coin pickup interaction.
+5. How did adding sound and interaction improve your scene?
+    It made the scene feel much less stagnant.
+6. What additional interactive object would you add if you had another hour?
+    I would love maybe add more NPCs for the character to interact with.
